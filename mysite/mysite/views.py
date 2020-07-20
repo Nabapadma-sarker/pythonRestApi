@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from .serializers import UserSerializer, GroupSerializer
+from .serializers import UserSerializer, GroupSerializer, PostSerializer
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
+from mysite.models import Post, Comment
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -20,7 +21,19 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
 def register(request):
     form = UserCreationForm()
     context = {'form' : form}
     return render(request, 'register.html', context)
+
+# def posts(request):
+#     istekler = models.Post.objects.all()
+#     return render(request, 'list.html', {'hh' : istekler})
