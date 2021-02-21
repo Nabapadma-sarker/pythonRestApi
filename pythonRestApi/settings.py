@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest-framework',
+    'rest_framework',
     'eCommerceApi'
 ]
 
@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'pythonRestApi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'pythonRestApi',
+        'USER': 'root',
+        'PASSWORD': 'rootpass',
+        'HOST': 'database',
+        'PORT': '3306',
     }
 }
 

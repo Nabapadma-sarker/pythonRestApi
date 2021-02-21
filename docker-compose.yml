@@ -1,0 +1,46 @@
+version: "3.3"
+   
+services:
+  webapp:
+    build: ../e-commerce
+    volumes: 
+      - ../e-commerce:/app
+    depends_on:
+      - apiapp
+    ports:
+      - 80:3000
+      
+  apiapp:
+    build: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && DJANGO_SUPERUSER_PASSWORD=testpass python manage.py createsuperuser --username testuser --email admin@email.com --noinput && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    links:
+      - database
+
+  database:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: pythonRestApi
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - 3306:3306
+
+  phpmyadminapp:
+    container_name: phpmyadmin_app
+    image: phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      PMA_HOST: database
+    ports:
+      - "5000:80"
+    depends_on:
+      - database
+    links:
+      - database
