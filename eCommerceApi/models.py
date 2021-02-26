@@ -23,7 +23,7 @@ class Order(models.Model):
     zipCode = models.CharField(max_length=20)
     phoneNo = models.CharField(max_length=20)
     orderComment = models.CharField(max_length=255)
-    otherShippingAddress = models.CharField(max_length=255)
+    otherShippingAddress = models.CharField(max_length=255, null=True)
     paymentMethodType = models.CharField(max_length=20)
     subTotal = models.IntegerField(default=0, null=False)
     delivery = models.IntegerField(default=0, null=False)
