@@ -27,7 +27,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
 class OrderViewSet(viewsets.ModelViewSet):

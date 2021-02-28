@@ -9,9 +9,21 @@ class Product(models.Model):
     description = models.TextField(max_length=500)
     hoverImage = models.ImageField(upload_to='products')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    productCategorie = models.ForeignKey(ProductCategorie)
+    productIamge = models.ManyToManyField(ProductIamge)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+class ProductCategorie(models.Model):
+    category = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class ProductIamge(models.Model):
+    imageLink = models.ImageField(upload_to='products')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Order(models.Model):
     firstName = models.CharField(max_length=255)
