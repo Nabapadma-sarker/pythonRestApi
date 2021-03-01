@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
-from .models import Product, Order, OrderDetail
+from .models import Product, Order, OrderDetail, ProductCategorie, ProductImage
 from rest_framework import permissions, viewsets, serializers, generics
-from .serializers import UserSerializer, GroupSerializer, ProductSerializer, OrderSerializer, OrderDetailSerializer, RegisterSerializer
+from .serializers import UserSerializer, GroupSerializer, ProductCategorieSerializer, ProductImageSerializer, ProductSerializer, OrderSerializer, OrderDetailSerializer, RegisterSerializer
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
 # Create your views here.
@@ -21,6 +21,18 @@ class UserRegister(generics.CreateAPIView):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+class ProductCategorieViewSet(viewsets.ModelViewSet):
+    queryset = ProductCategorie.objects.all()
+    serializer_class = ProductCategorieSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+class ProductImageViewSet(viewsets.ModelViewSet):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 

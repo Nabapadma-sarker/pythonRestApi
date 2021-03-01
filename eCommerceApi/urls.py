@@ -7,6 +7,8 @@ from eCommerceApi import views
 router = routers.DefaultRouter()
 router.register('users', views.UserViewSet)
 router.register('groups', views.GroupViewSet)
+router.register('product-categorie', views.ProductCategorieViewSet)
+router.register('Product-image', views.ProductImageViewSet)
 router.register('products', views.ProductViewSet)
 router.register('orders', views.OrderViewSet)
 router.register('ordergroups', views.OrderDetailViewSet)

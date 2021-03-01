@@ -2,6 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+class ProductCategorie(models.Model):
+    category = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class ProductImage(models.Model):
+    imageLink = models.ImageField(upload_to='products')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Product(models.Model):
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=5, decimal_places=2)
@@ -9,19 +19,8 @@ class Product(models.Model):
     description = models.TextField(max_length=500)
     hoverImage = models.ImageField(upload_to='products')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    productCategorie = models.ForeignKey(ProductCategorie)
-    productIamge = models.ManyToManyField(ProductIamge)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-class ProductCategorie(models.Model):
-    category = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class ProductIamge(models.Model):
-    imageLink = models.ImageField(upload_to='products')
+    productCategorie = models.ForeignKey(ProductCategorie, on_delete=models.CASCADE, blank=True, null=True)
+    productImage = models.ManyToManyField(ProductImage)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,6 +48,6 @@ class Order(models.Model):
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    orderedQuantity = models.IntegerField(null=False)
+    orderedQuantity = models.IntegerField(default=0, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

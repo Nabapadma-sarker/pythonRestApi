@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Product, Order, OrderDetail
+from .models import Product, Order, OrderDetail, ProductCategorie, ProductImage
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -37,15 +37,25 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
+class ProductCategorieSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductCategorie
+        fields = ['url', 'id', 'category']
+
+class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['url', 'id', 'imageLink']
+
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Product
-        fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'hoverImage', 'user']
+        fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'hoverImage', 'productCategorie', 'productImage', 'user']
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order
-        fields = ['url', 'firstName', 'lastName', 'companyName', 'countryName', 'shippingAddress', 'town', 'zipCode', 'phoneNo', 'orderComment', 'otherShippingAddress', 'paymentMethodType', 'subTotal', 'delivery', 'total', 'user', 'product']
+        fields = ['url', 'id', 'firstName', 'lastName', 'companyName', 'countryName', 'shippingAddress', 'town', 'zipCode', 'phoneNo', 'orderComment', 'otherShippingAddress', 'paymentMethodType', 'subTotal', 'delivery', 'total', 'user', 'product']
 
 class OrderDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
