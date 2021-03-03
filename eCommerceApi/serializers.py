@@ -1,23 +1,38 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import Product, Order, OrderDetail, ProductCategorie, ProductImage
+from var_dump import var_dump
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):    
+    class Meta:
+        model = Group
+        fields = ('url', 'name')
+
+class UserSerializer(serializers.ModelSerializer):   
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'password', 'groups']
+        fields = ('url', 'username', 'email', 'password', 'groups',)
         extra_kwargs = {
             'password':{
                 'write_only':True,
                 'required':True
             }
         }
-
     def create(self, validated_data):
-
-        user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
-
+        groups_data = validated_data.pop('groups')
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        # user.groups.set(groups_data)
+        for group_data in groups_data:
+            var_dump(group_data.id)
+            group = Group.objects.get(id=group_data.id)
+            var_dump(group)
+            # user.groups.add(group)
+            group.user_set.add(user)
         return user
+        
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,11 +46,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['url', 'name']
 
 class ProductCategorieSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
