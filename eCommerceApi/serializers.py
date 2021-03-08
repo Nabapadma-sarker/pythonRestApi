@@ -50,7 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
                 else:
                     continue
             else:
-                Group.objects.create(user=instance, **group_data)
+                group = Group.objects.create(user=instance, **group_data)
                 user.groups.add(group)
         return instance
         
@@ -79,12 +79,13 @@ class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'id', 'imageLink']
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
-    productCategorie = ProductCategorieSerializer(many=True)
+    # productCategorie = ProductCategorieSerializer(many=True)
+    productCategorie = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     productImage = ProductImageSerializer(many=True)
-    user = UserSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     class Meta:
         model = Product
-        fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'hoverImage', 'productCategorie', 'productImage', 'user']
+        fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'hoverImage', 'productCategorie', 'user', 'productImage']
     
 
     def create(self, validated_data):
@@ -92,9 +93,21 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
         product_images = validated_data.pop('productImage')
         product = Product.objects.create(**validated_data)
         product.save()
+        var_dump(self.request.user)
         for product_categorie in product_categories:
-            productCategorie = ProductCategorie.objects.create(product=product, **product_categorie)
-            product.productCategorie.add(productCategorie)
+            if 'id' in product_categorie.keys():
+                if ProductCategorie.objects.filter(id=product_categorie["id"]).exists():
+                    productCategorie = ProductCategorie.objects.get(id=group_data["id"])
+                    var_dump(productCategorie)
+                    productCategorie.category=product_categorie["category"]
+                    productCategorie.save()
+                    product.productCategorie.add(productCategorie)
+                else:
+                    continue
+            else:
+                productCategorie = ProductCategorie.objects.create(user=product, **product_categorie)
+                product.productCategorie.add(productCategorie)
+
         for product_image in product_images:
             productImage = ProductImage.objects.create(product=product, **product_image)
             product.productImage.add(productImage)
