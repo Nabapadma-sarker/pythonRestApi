@@ -4,6 +4,7 @@ from .models import Product, Order, OrderDetail, ProductCategorie, ProductImage
 from rest_framework import permissions, viewsets, serializers, generics
 from .serializers import UserSerializer, GroupSerializer, ProductCategorieSerializer, ProductImageSerializer, ProductSerializer, OrderSerializer, OrderDetailSerializer, RegisterSerializer
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -35,12 +36,20 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     serializer_class = ProductImageSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
+    parser_classes = [FormParser, MultiPartParser]
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
+    parser_classes = [FormParser, MultiPartParser]
+
+    # def create(self, request, *args, **kwargs):
+    # response = super().create(request, *args, **kwargs)
+    # instance = response.data
+        # return super().create(request, *args, **kwargs)
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()

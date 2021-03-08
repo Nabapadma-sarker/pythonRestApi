@@ -81,7 +81,7 @@ class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     # productCategorie = ProductCategorieSerializer(many=True)
     productCategorie = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
-    productImage = ProductImageSerializer(many=True)
+    productImage = ProductImageSerializer(many=True,  required=False)
     user = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     class Meta:
         model = Product
@@ -89,28 +89,33 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     
 
     def create(self, validated_data):
-        product_categories = validated_data.pop('productCategorie')
-        product_images = validated_data.pop('productImage')
-        product = Product.objects.create(**validated_data)
-        product.save()
-        var_dump(self.request.user)
-        for product_categorie in product_categories:
-            if 'id' in product_categorie.keys():
-                if ProductCategorie.objects.filter(id=product_categorie["id"]).exists():
-                    productCategorie = ProductCategorie.objects.get(id=group_data["id"])
-                    var_dump(productCategorie)
-                    productCategorie.category=product_categorie["category"]
-                    productCategorie.save()
-                    product.productCategorie.add(productCategorie)
-                else:
-                    continue
-            else:
-                productCategorie = ProductCategorie.objects.create(user=product, **product_categorie)
-                product.productCategorie.add(productCategorie)
+        # product_categories = validated_data.pop('productCategorie')
+        # product_images = validated_data.pop('productImage')
+        var_dump(validated_data)
 
-        for product_image in product_images:
-            productImage = ProductImage.objects.create(product=product, **product_image)
-            product.productImage.add(productImage)
+        validated_data['user']=self.context['request'].user
+        var_dump(self.context['request'].user.id)
+        product = Product.objects.create(**validated_data)
+        # product.user=self.context['request'].user.id
+        product.save()
+        # var_dump(self.request.user)
+        # for product_categorie in product_categories:
+        #     if 'id' in product_categorie.keys():
+        #         if ProductCategorie.objects.filter(id=product_categorie["id"]).exists():
+        #             productCategorie = ProductCategorie.objects.get(id=group_data["id"])
+        #             var_dump(productCategorie)
+        #             productCategorie.category=product_categorie["category"]
+        #             productCategorie.save()
+        #             product.productCategorie.add(productCategorie)
+        #         else:
+        #             continue
+        #     else:
+        #         productCategorie = ProductCategorie.objects.create(user=product, **product_categorie)
+        #         product.productCategorie.add(productCategorie)
+
+        # for product_image in product_images:
+        #     productImage = ProductImage.objects.create(product=product, **product_image)
+        #     product.productImage.add(productImage)
         return product
 
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
