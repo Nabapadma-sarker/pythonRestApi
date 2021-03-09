@@ -36,7 +36,6 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     serializer_class = ProductImageSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
-    parser_classes = [FormParser, MultiPartParser]
 
 
 class ProductViewSet(viewsets.ModelViewSet):
