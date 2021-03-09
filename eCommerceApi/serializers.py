@@ -76,7 +76,7 @@ class ProductCategorieSerializer(serializers.ModelSerializer):
 class ProductImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['url', 'id', 'imageLink']
+        fields = ['url', 'id', 'imageLink', 'product']
 
 class ProductSerializer(serializers.ModelSerializer):
     productImage = serializers.ListField(
@@ -118,14 +118,16 @@ class ProductSerializer(serializers.ModelSerializer):
 
         for product_image in product_images:
             var_dump(product_image)
-            productImage = ProductImage.objects.create(imageLink=product_image)
-            product.productImage.add(productImage)
+            productImage1 = ProductImage.objects.create(product=product, imageLink=product_image)
+            # product.productImage.add(productImage)
         return product
 
 class ProductListSerializer(serializers.ModelSerializer):
+    productImage = ProductImageSerializer(many=True, read_only=True)
     class Meta:
         model = Product
         fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'productCategorie', 'hoverImage', 'user', 'productImage']
+        # depth=1
     
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

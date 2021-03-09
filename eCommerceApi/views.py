@@ -38,7 +38,7 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
 
-class ProductListViewSet(viewsets.ModelViewSet):
+class ProductListViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
