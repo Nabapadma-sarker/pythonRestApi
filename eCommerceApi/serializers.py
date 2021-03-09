@@ -122,6 +122,11 @@ class ProductSerializer(serializers.ModelSerializer):
             product.productImage.add(productImage)
         return product
 
+class ProductListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'productCategorie', 'hoverImage', 'user', 'productImage']
+    
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Order

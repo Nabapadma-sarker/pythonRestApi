@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from .models import Product, Order, OrderDetail, ProductCategorie, ProductImage
 from rest_framework import permissions, viewsets, serializers, generics
-from .serializers import UserSerializer, GroupSerializer, ProductCategorieSerializer, ProductImageSerializer, ProductSerializer, OrderSerializer, OrderDetailSerializer, RegisterSerializer
+from .serializers import UserSerializer, GroupSerializer, ProductCategorieSerializer, ProductImageSerializer, ProductSerializer, OrderSerializer, OrderDetailSerializer, RegisterSerializer, ProductListSerializer
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 
@@ -38,13 +38,20 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
 
+class ProductListViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductListSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+    # parser_classes = [FormParser, MultiPartParser]
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
     parser_classes = [FormParser, MultiPartParser]
-
     # def create(self, request, *args, **kwargs):
     # response = super().create(request, *args, **kwargs)
     # instance = response.data
