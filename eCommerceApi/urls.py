@@ -10,7 +10,6 @@ router.register('groups', views.GroupViewSet)
 router.register('product-categorie', views.ProductCategorieViewSet)
 router.register('Product-image', views.ProductImageViewSet)
 router.register('products', views.ProductViewSet)
-router.register('productslist', views.ProductListViewSet)
 router.register('orders', views.OrderViewSet)
 router.register('ordergroups', views.OrderDetailViewSet)
 

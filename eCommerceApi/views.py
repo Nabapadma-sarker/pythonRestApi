@@ -37,25 +37,18 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
-
-class ProductListViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductListSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    authentication_classes = (TokenAuthentication, SessionAuthentication)
-    # parser_classes = [FormParser, MultiPartParser]
-
-
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
-    parser_classes = [FormParser, MultiPartParser]
-    # def create(self, request, *args, **kwargs):
-    # response = super().create(request, *args, **kwargs)
-    # instance = response.data
-        # return super().create(request, *args, **kwargs)
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
+    
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return ProductListSerializer
+            
+        return ProductSerializer
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
