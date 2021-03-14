@@ -4,11 +4,10 @@ from .models import Product, Order, OrderDetail, ProductCategorie, ProductImage
 from var_dump import var_dump
 import json
 
-class GroupSerializer(serializers.ModelSerializer):    
-    id = serializers.IntegerField(required=False)
+class GroupSerializer(serializers.ModelSerializer):   
     class Meta:
         model = Group
-        fields = "__all__"
+        fields = ['id', 'name']
 
 class UserSerializer(serializers.ModelSerializer):   
     groups = GroupSerializer(many=True)
@@ -56,17 +55,31 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
         
 
-class RegisterSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):    
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['username', 'email', 'password', 'groups']
+        extra_kwargs = {
+            'password':{
+                'write_only':True,
+                'required':True
+            },
+            'email':{
+                'required':True
+            }
+        }
 
     def create(self, validated_data):
+        var_dump(validated_data)
+        groups_data = validated_data.pop('groups')
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
         user.save()
+        var_dump(groups_data)
+        for group_data in groups_data:
+            user.groups.add(group_data)
+                
         return user
 
 class ProductCategorieSerializer(serializers.ModelSerializer):
@@ -121,6 +134,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductListSerializer(serializers.ModelSerializer):
     productImage = ProductImageSerializer(many=True, read_only=True)
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Product
         fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'productCategorie', 'hoverImage', 'user', 'productImage']

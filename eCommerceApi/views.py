@@ -17,13 +17,12 @@ class UserRegister(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = (permissions.AllowAny, )
+    # parser_classes = [JSONParser]
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = (TokenAuthentication, SessionAuthentication)
 
 class ProductCategorieViewSet(viewsets.ModelViewSet):
     queryset = ProductCategorie.objects.all()
