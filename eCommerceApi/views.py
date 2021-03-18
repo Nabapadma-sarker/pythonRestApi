@@ -53,15 +53,15 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 class ProductUserwiseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    serializer_class = ProductListSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
 
     def list(self, request):
-        var_dump(request.user)
+        # var_dump(request.user)
         # queryset = Product.objects.filter(user=request)
         queryset = Product.objects.filter(user=request.user)
-        serializer = ProductListSerializer(queryset, many=True)
+        serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
         
 class OrderViewSet(viewsets.ModelViewSet):
