@@ -74,6 +74,11 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             os.remove(old_file.path)
 
 class Order(models.Model):
+    """
+    this will save single orders details.
+    all products primary key and 
+    quantity of every product will be in OrderDetail Model.
+    """
     firstName = models.CharField(max_length=255)
     lastName = models.CharField(max_length=255)
     companyName = models.CharField(max_length=50)
@@ -88,7 +93,7 @@ class Order(models.Model):
     subTotal = models.IntegerField(default=0, null=False)
     delivery = models.IntegerField(default=0, null=False)
     total = models.IntegerField(default=0, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ManyToManyField(Product, through='OrderDetail')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -98,6 +103,10 @@ class Order(models.Model):
 
 
 class OrderDetail(models.Model):
+    """
+    every order and every products quantity 
+    and relation will be here.
+    """
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     orderedQuantity = models.IntegerField(default=0, null=False)

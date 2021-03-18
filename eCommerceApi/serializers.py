@@ -140,6 +140,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         fields = ['url', 'id', 'title', 'price', 'remainQuantity', 'description', 'productCategorie', 'hoverImage', 'user', 'productImage']
     
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    # user = serializers.PrimaryKeyRelatedField(null=True, source='user', allow_null=True, read_only=True)
     class Meta:
         model = Order
         fields = ['url', 'id', 'firstName', 'lastName', 'companyName', 'countryName', 'shippingAddress', 'town', 'zipCode', 'phoneNo', 'orderComment', 'otherShippingAddress', 'paymentMethodType', 'subTotal', 'delivery', 'total', 'user', 'product']
