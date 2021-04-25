@@ -6,6 +6,10 @@ from .serializers import UserSerializer, GroupSerializer, ProductCategorieSerial
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.response import Response
+from rest_framework.authtoken.views import obtain_auth_token,ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from var_dump import var_dump
 
 # Create your views here.
@@ -14,6 +18,21 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = (TokenAuthentication, SessionAuthentication)
+
+
+class UserIdWithAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+            'email': user.email
+        })
 
 class UserRegister(generics.CreateAPIView):
     queryset = User.objects.all()
