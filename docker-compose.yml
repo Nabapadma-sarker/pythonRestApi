@@ -4,7 +4,7 @@ services:
   webapp:
     build: ../e-commerce
     volumes: 
-      - ../e-commerce:/app
+      - ../e-commerce/src:/app/src
     depends_on:
       - apiapp
     ports:
