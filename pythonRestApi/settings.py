@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'pythonRestApi',
         'USER': 'root',
         'PASSWORD': 'rootpass',
-        'HOST': os.environ['DATABASE_HOST'],
+        'HOST': os.environ.get('DATABASE_HOST', 'database'),
         'PORT': '3306',
     }
 }
