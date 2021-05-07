@@ -6,7 +6,7 @@ node {
      commit_id = readFile('.git/commit-id').trim()
    }
    stage('test with Mysql DB') {
-     def mysql = docker.image('mysql').run("-e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE: pythonRestApi -e MYSQL_ROOT_PASSWORD=rootpass") 
+     def mysql = docker.image('mysql').run("-e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=pythonRestApi -e MYSQL_ROOT_PASSWORD=rootpass") 
      def myTestContainer = docker.image('python:3')
      myTestContainer.pull()
      myTestContainer.inside("--link ${mysql.id}:mysql") { // using linking, mysql will be available at host: mysql, port: 3306     
