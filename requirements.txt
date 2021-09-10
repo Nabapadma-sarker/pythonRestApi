@@ -14,7 +14,7 @@ py==1.10.0
 pyparsing==2.4.7
 pytest==6.2.2
 pytz==2021.1
-sqlparse==0.4.1
+sqlparse==0.4.2
 toml==0.10.2
 typing-extensions==3.7.4.3
 var-dump==1.2
